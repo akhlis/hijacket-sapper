@@ -5,30 +5,8 @@
     import { onMount } from 'svelte'
     import AutoComplete from './AutoComplete.svelte'
 
-    import { genericDataUrl, fetchAvatar } from './cost.js';
-	// The fetchAvatar action is used on the <img> HTMLImageElement
-	//   use:fetchAvatar={ url }
-	//	
-    let disabled = false;
+
     let promise = Promise.resolve([]);
-    let genericAvatar = genericDataUrl();
-
-    async function fetchUsers() {
-        const response = await self.fetch('https://api.github.com/users?per_page=5');
-
-        if (response.ok) {
-        return response.json();
-            
-        } else {
-            throw new Error(users);
-        }
-    }
-
-    function handleClick() {
-        // Now set it to the real fetch promise 
-        promise = fetchUsers();
-        disabled = true;
-    }
 
     export let districts;
     let selectedDistrict;
@@ -39,8 +17,8 @@
         console.log(selectedDistrict.id)
     }
 
-    async function fetchCourier() {
-        const response = await self.fetch('https://qirim.netlify.app/api/cost/23/9');
+    $: async function fetchCourier() {
+        const response = await self.fetch('https://qirim.netlify.app/api/cost/23/' + selectedDistrict.id); 
 
         if (response.ok) {
         return response.json();
@@ -101,8 +79,8 @@
 	<p>...waiting</p>
 {:then couriers}
     <h3>{couriers.title}</h3>
-	{#each couriers.couriers as courier}
-	<p>{courier.name}</p>
+	{#each couriers.couriers || [] as courier}
+	<p>{courier.name}  {courier.service} {courier.cost}</p>
 	{/each}
 {:catch error}
 	<p style="color: red">{error.message}</p>
