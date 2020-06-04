@@ -11,7 +11,6 @@
 	import Checkout from '../components/Checkout.svelte';
 
 	export let districts;
-    console.log(districts)
 </script>
 
 <svelte:head>

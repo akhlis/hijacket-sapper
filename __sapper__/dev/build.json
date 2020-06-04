@@ -1,0 +1,41 @@
+{
+  "bundler": "rollup",
+  "shimport": "1.0.1",
+  "assets": {
+    "main": "client.adb98017.js"
+  },
+  "css": {
+    "main": "main.1337900513.css",
+    "chunks": {
+      "index.svelte": [
+        "client.adb98017.css"
+      ],
+      "checkout.svelte": [
+        "checkout.87122821.css",
+        "client.adb98017.css"
+      ],
+      "product/[slug].svelte": [
+        "client.adb98017.css"
+      ],
+      "about.svelte": [
+        "client.adb98017.css"
+      ],
+      "store/index.svelte": [
+        "index.829a5c28.css",
+        "client.adb98017.css"
+      ],
+      "store/[slug].svelte": [
+        "[slug].3a68c7fd.css",
+        "client.adb98017.css"
+      ],
+      "shop/index.svelte": [
+        "index.7119c4fc.css",
+        "client.adb98017.css"
+      ],
+      "shop/[slug].svelte": [
+        "[slug].ba0d5062.css",
+        "client.adb98017.css"
+      ]
+    }
+  }
+}

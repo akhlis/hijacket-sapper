@@ -106,6 +106,7 @@
     onChange(selectedItem);
   }
   $: selectedItem, onSelectedItemChanged();
+  $: console.log(selectedItem)
   // HTML elements
   let input;
   let list;
@@ -446,7 +447,7 @@
     let n = 1;
     const len = qs.split(")(").length + 1;
     let repl = "";
-    for (; n < len; n++) repl += n % 2 ? `<b>$${n}</b>` : `$${n}`;
+    for (; n < len; n++) repl += n % 2 ? `<b class="text-primary">$${n}</b>` : `$${n}`;
     return i => {
       const newI = Object.assign({ highlighted: {} }, i);
       if (fields) {
@@ -474,45 +475,21 @@
     padding: 5px 11px;
   }
   .autocomplete-list {
-    background: #fff;
-    position: relative;
-    width: 100%;
-    overflow-y: auto;
-    z-index: 99;
-    padding: 10px 0;
-    top: 0px;
-    border: 1px solid #999;
     max-height: calc(15 * (1rem + 10px) + 15px);
     user-select: none;
   }
   .autocomplete-list:empty {
     padding: 0;
   }
-  .autocomplete-list-item {
-    padding: 5px 15px;
-    color: #333;
-    cursor: pointer;
-    line-height: 1;
-  }
-  .autocomplete-list-item:hover,
   .autocomplete-list-item.selected {
-    background-color: #2e69e2;
-    color: #fff;
-  }
-  .autocomplete-list-item-no-results {
-    padding: 5px 15px;
-    color: #999;
-    line-height: 1;
-  }
-  .autocomplete-list.hidden {
-    display: none;
+    @apply text-primary bg-orange-100 border-l-2 border-r-2 border-solid border-primary;
   }
 </style>
 
 <div class="{className} autocomplete select is-fullwidth {uniqueId}">
   <input
     type="text"
-    class="input autocomplete-input"
+    class="input autocomplete-input w-full text-sm relative bg-transparent border border-solid rounded-sm text-gray-700 hover:text-gray-500 focus:text-gray-600 focus:border-primary focus:outline-none transition-all duration-500 ease-in-out hover:placeholder-gray-300 z-50 py-3px px-3"
     {placeholder}
     {name}
     {disabled}
@@ -523,15 +500,15 @@
     on:focus={onFocus}
     on:keydown={onKeyDown}
     on:click={onInputClick}
-    on:keypress={onKeyPress} />
+    on:keypress={onKeyPress}/>
   <div
-    class="autocomplete-list {opened ? '' : 'hidden'} is-fullwidth"
+    class="autocomplete-list {opened ? '' : 'hidden display-none'} is-fullwidth w-full relative bg-white border border-solid border-gray-300 overflow-y-auto z-100 top-0 py-3"
     bind:this={list}>
     {#if filteredListItems && filteredListItems.length > 0}
       {#each filteredListItems as listItem, i}
         {#if maxItemsToShowInList <= 0 || i < maxItemsToShowInList}
           <div
-            class="autocomplete-list-item {i === highlightIndex ? 'selected' : ''}"
+            class="autocomplete-list-item text-sm text-gray-700 hover:text-primary hover:bg-orange-100 hover:border-l-2 hover:border-r-2 hover:border-solid hover:border-primary cursor-pointer leading-none py-2 px-4 {i === highlightIndex ? 'selected' : ''}"
             on:click={() => onListItemClick(listItem)}>
             {#if listItem.highlighted}
               {@html listItem.highlighted.label}
@@ -543,12 +520,12 @@
       {/each}
 
       {#if maxItemsToShowInList > 0 && filteredListItems.length > maxItemsToShowInList}
-        <div class="autocomplete-list-item-no-results">
-          ...{filteredListItems.length - maxItemsToShowInList} results not shown
+        <div class="autocomplete-list-item-no-results text-sm text-gray-500 bg-gray-100 leading-none py-2 px-4">
+          ...{filteredListItems.length - maxItemsToShowInList} hasil tidak ditampilkan
         </div>
       {/if}
     {:else if noResultsText}
-      <div class="autocomplete-list-item-no-results">{noResultsText}</div>
+      <div class="autocomplete-list-item-no-results text-sm text-gray-500 bg-gray-100 leading-none py-2 px-4">{noResultsText}</div>
     {/if}
   </div>
 </div>

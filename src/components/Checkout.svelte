@@ -5,9 +5,55 @@
     import { onMount } from 'svelte'
     import AutoComplete from './AutoComplete.svelte'
 
+    import { genericDataUrl, fetchAvatar } from './cost.js';
+	// The fetchAvatar action is used on the <img> HTMLImageElement
+	//   use:fetchAvatar={ url }
+	//	
+    let disabled = false;
+    let promise = Promise.resolve([]);
+    let genericAvatar = genericDataUrl();
+
+    async function fetchUsers() {
+        const response = await self.fetch('https://api.github.com/users?per_page=5');
+
+        if (response.ok) {
+        return response.json();
+            
+        } else {
+            throw new Error(users);
+        }
+    }
+
+    function handleClick() {
+        // Now set it to the real fetch promise 
+        promise = fetchUsers();
+        disabled = true;
+    }
+
     export let districts;
-    console.log(districts)
     let selectedDistrict;
+
+    $: console.log('update kec:' + selectedDistrict)
+
+    $: if (selectedDistrict !== undefined) {
+        console.log(selectedDistrict.id)
+    }
+
+    async function fetchCourier() {
+        const response = await self.fetch('https://qirim.netlify.app/api/cost/23/9');
+
+        if (response.ok) {
+        return response.json();
+            
+        } else {
+            throw new Error(couriers);
+        }
+    }
+
+    function getCost() {
+        // Now set it to the real fetch promise 
+        promise = fetchCourier();
+    }
 
     onMount(() => {
         carts.useLocalStorage();
@@ -46,11 +92,22 @@
     }
 </script>
 
+<!-- Stop hitting GitHub on every source edit -->
+<button on:click={ getCost } >
+	get cost
+</button>
 
-<AutoComplete
-  items={districts}
-  bind:selectedItem={selectedDistrict}
-  labelFieldName="name" /> 
+{#await promise}
+	<p>...waiting</p>
+{:then couriers}
+    <h3>{couriers.title}</h3>
+	{#each couriers.couriers as courier}
+	<p>{courier.name}</p>
+	{/each}
+{:catch error}
+	<p style="color: red">{error.message}</p>
+{/await}
+
 
 
 
@@ -115,9 +172,13 @@
                                 </div>
                                 <div class="form-address__item relative col-span-1 mb-2">
                                     <label class="block text-gray-700 mb-2" for="name">Kota atau Kecamatan</label>
-                                    <input
-                                        class="w-full text-sm relative bg-transparent border border-solid rounded-sm text-gray-700 hover:text-gray-500 focus:text-gray-600 focus:border-primary focus:outline-none transition-all duration-500 ease-in-out hover:placeholder-gray-300 z-50 py-3px px-3"
-                                        type="text">
+                                    <AutoComplete
+                                        items={districts}
+                                        placeholder="Masukkan nama kecamatan"
+                                        bind:selectedItem={selectedDistrict}
+                                        labelFieldName="name"
+                                        minCharactersToSearch="3"
+                                        maxItemsToShowInList="10"/>
                                 </div>
                             </div>
 
@@ -132,6 +193,10 @@
                         </div>
                     </form>
                 </div>
+
+                {#if selectedDistrict !== undefined}
+                <p>{selectedDistrict.id} {selectedDistrict.name}</p>
+                {/if}
 
                 <div class="bg-grey pt-8"></div>
 
