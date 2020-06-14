@@ -42,7 +42,7 @@
 			{#each slides || [] as slide, i}
 				{#if i === cur}
 				<div class="slider-for__item" in:hslide={transition_args} out:hslide={transition_args}>
-					<img class="product__image" src="https://hijacket-api.netlify.app{slide.image}" alt="image slider" />
+					<img class="product__image" src="https://api.hijacket.net{slide.image}" alt="image slider" />
                 </div>
 				{/if}
 			{/each} 
@@ -58,7 +58,7 @@
 		<div class="product__slide-nav">
 			{#each slides || [] as slide, i}
 			<button on:click={()=>changeSlide(i)} class="product__slide-btn" class:selected={cur == i}>
-				<img class="product__slide-thumb" src="https://hijacket-api.netlify.app/carousel{slide.image}" alt="image slider" />
+				<img class="product__slide-thumb" src="https://api.hijacket.net/carousel{slide.image}" alt="image slider" />
 			</button>
 			{/each}
 		</div>

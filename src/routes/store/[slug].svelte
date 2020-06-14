@@ -2,7 +2,7 @@
   export async function preload({ params, query }) {
     // the `slug` parameter is available because
     // this file is called [slug].svelte
-    const res = await this.fetch(`https://hijacket-api.netlify.app/${params.slug}/index.json`);
+    const res = await this.fetch(`https://api.hijacket.net/${params.slug}/index.json`);
     const post = await res.json();
 
       return { post };
@@ -107,6 +107,13 @@
     <div class="max-w-screen-md mx-auto text-sm text-gray-700">
     {@html marked(post.content)}
     </div>
+	<div class="max-w-screen-md mx-auto text-sm text-gray-700">
+	{#each post.galleries || [] as gallery}
+		<div class="mb-4">
+			<img class="product__image" src="https://api.hijacket.net{gallery.image}" alt="image slider" />
+		</div>
+	{/each}
+	</div>
   </div>
   <section class="product__featured bg-white py-4 px-3 mb-6">
     <header class="text-center uppercase flex justify-between items-center mb-4">

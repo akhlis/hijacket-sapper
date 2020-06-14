@@ -46,6 +46,7 @@
             sku: products.sku + '-' + products.variants[selectedVariant].size,
             size: products.variants[selectedVariant].size,
             price: products.variants[selectedVariant].price,
+            weight: products.variants[selectedVariant].weight,
             quantity: quantity
         }]
     }

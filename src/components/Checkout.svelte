@@ -10,28 +10,30 @@
 
     export let districts;
     let selectedDistrict;
-
-    $: console.log('update kec:' + selectedDistrict)
+    let districtId = 1;
 
     $: if (selectedDistrict !== undefined) {
         console.log(selectedDistrict.id)
+        districtId = selectedDistrict.id
     }
+	
+	async function fetchCourier() {
+		const res = await self.fetch(`https://qirim.netlify.app/api/cost/23/${districtId}`);
+		const data = await res.json();
 
-    $: async function fetchCourier() {
-        const response = await self.fetch('https://qirim.netlify.app/api/cost/23/' + selectedDistrict.id); 
+		if (res.ok) {
+		  return data;
+		} else {
+		  throw new Error(data);
+		}
+	}
 
-        if (response.ok) {
-        return response.json();
-            
-        } else {
-            throw new Error(couriers);
-        }
-    }
+    let getCost = () => {
+		promise = fetchCourier();
+	}
 
-    function getCost() {
-        // Now set it to the real fetch promise 
-        promise = fetchCourier();
-    }
+    $: selectedDistrict, getCost();
+
 
     onMount(() => {
         carts.useLocalStorage();
@@ -70,20 +72,15 @@
     }
 </script>
 
-<!-- Stop hitting GitHub on every source edit -->
-<button on:click={ getCost } >
-	get cost
-</button>
-
 {#await promise}
-	<p>...waiting</p>
+  <p>loading</p>
 {:then couriers}
     <h3>{couriers.title}</h3>
 	{#each couriers.couriers || [] as courier}
 	<p>{courier.name}  {courier.service} {courier.cost}</p>
 	{/each}
 {:catch error}
-	<p style="color: red">{error.message}</p>
+  <p style="color: red">{error.message}</p>
 {/await}
 
 
