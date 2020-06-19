@@ -2,21 +2,10 @@
 	import Cart from './Cart.svelte';
 
 	export let segment;
+	export let menuCategories;
 </script>
 
 <style>
-	.nav__submenu-wrapper {
-		height: 0;
-		opacity: 0;
-		overflow: hidden;
-		transition: all 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
-
-		&.is-active {
-			height: auto;
-			opacity: 1;
-		}
-	}
-
 	@screen lg {
 		.submenu {
 			top: 100%;
@@ -165,7 +154,7 @@
 						<li
 							class="has-submenu relative text-gray-700 hover:text-primary border-b border-solid border-gray-300 lg:border-0 py-3 px-6 mb-0">
 							<a class="menu-item__link text-current hover:no-underline lg:flex items-center"
-								href="/product">Katalog Produk
+								href="product">Katalog Produk
 								<svg aria-hidden="true" focusable="false"
 									data-prefix="far" data-icon="angle-down" role="img"
 									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
@@ -176,19 +165,12 @@
 								</svg></a>
 							<ul class="submenu whitespace-no-wrap list-none lg:bg-gray-100 lg:absolute lg:invisible lg:opacity-0 lg:z-10 lg:last:pb-4 pl-0 mb-0"
 								aria-hidden="true">
+								{#each menuCategories as category}
 								<li
 									class="text-gray-700 hover:text-primary border-b border-solid border-gray-300 last:border-0 lg:border-0 py-1 px-4 lg:pl-4 lg:hover:bg-gray-200 mb-0">
-									<a class="submenu-item__link text-current" href="/avia">Avia</a>
+									<a class="submenu-item__link text-current" rel="prefetch" href="product/{category.slug}">{category.title}</a>
 								</li>
-								<li
-									class="text-gray-700 hover:text-primary border-b border-solid border-gray-300 last:border-0 lg:border-0 py-1 px-4 lg:pl-4 lg:hover:bg-gray-200 mb-0">
-									<a class="submenu-item__link text-current"
-										href="/basic">Basic</a>
-								</li>
-								<li
-									class="text-gray-700 hover:text-primary border-b border-solid border-gray-300 last:border-0 lg:border-0 py-1 px-4 lg:pl-4 lg:hover:bg-gray-200 mb-0">
-									<a class="submenu-item__link text-current"
-										href="/beautix">Beautix</a></li>
+								{/each}
 							</ul>
 						</li>
 						<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
@@ -207,14 +189,12 @@
 								</svg></a>
 							<ul class="submenu whitespace-no-wrap list-none lg:bg-gray-100 lg:absolute lg:invisible lg:opacity-0 lg:z-10 lg:last:pb-4 pl-0 mb-0"
 								aria-hidden="true">
+								{#each menuCategories as category}
 								<li
 									class="text-gray-700 hover:text-primary border-b border-solid border-gray-300 last:border-0 lg:border-0 py-1 px-4 lg:pl-4 lg:hover:bg-gray-200 mb-0">
-									<a class="submenu-item__link text-current"
-										href="/claretta">Claretta</a></li>
-								<li
-									class="text-gray-700 hover:text-primary border-b border-solid border-gray-300 last:border-0 lg:border-0 py-1 px-4 lg:pl-4 lg:hover:bg-gray-200 mb-0">
-									<a class="submenu-item__link text-current" href="/elma">Elma</a>
+									<a class="submenu-item__link text-current" rel="prefetch" href="product/{category.slug}">{category.title}</a>
 								</li>
+								{/each}
 							</ul>
 						</li>
 					</ul>

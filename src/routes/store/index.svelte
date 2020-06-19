@@ -1,6 +1,7 @@
 <script context="module">
-  export async function preload(page, session) {
-    const res = await this.fetch("https://api.hijacket.net/index.json");
+  const apiUrl = process.env.SAPPER_APP_API_URL;
+  export async function preload({ params, query }) {
+    const res = await this.fetch(`${apiUrl}/index.json`);
     const posts = await res.json();
 
     return { posts };
@@ -10,6 +11,22 @@
 <script>
   import Card from './../../components/Card.svelte';
   export let posts;
+  let count = posts.noOfPages,
+      current = 1;
+  count = parseInt(count);
+  $: pages = count > 10 ? 10 : count;
+
+  // const apiUrl = process.env.SAPPER_APP_API_URL;
+
+  // function changePage(page) {
+  //   fetch(`${apiUrl}/${page !== 1 ? 'page/' + page : ''}/index.json`).then(res => {
+  //     return res.json()
+  //   }).then(result => {
+  //     posts = result
+  //     current = page
+  //     console.log(page);
+  //   })
+  // }
 </script>
 
 <svelte:head>
@@ -54,5 +71,71 @@
     </header>
     <Card cards={posts.data}/>
   </section>
+<!-- 
+{#if count>1}
+<div class="flex flex-col lg:flex-row justify-between items-center">
+  <div class="text-xs text-gray-500 items-center mb-4 lg:mb-0">Page {current} of {count}</div>
+  <div class="flex-1 flex items-center text-center justify-center">
+    {#if current > 1}
+      <button
+        class="pagination-link text-sm text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3 mr-1"
+        on:click={() => changePage(1)}>
+        <span>««</span>
+      </button>
+      <button
+        class="pagination-link text-sm text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3 mx-1"
+        on:click={() => changePage(current - 1)}>
+        <span>«</span>
+      </button>
+    {/if}
+    {#each { length: pages } as _, i}
+      <button
+        class="pagination-link text-sm text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3 mx-1"
+        class:active={current === i + 1}
+        on:click={() => changePage(i + 1)}>
+        {i + 1}
+      </button> 
+    {/each}
+    {#if current < count}
+      <button
+        class="pagination-link text-sm text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3 mx-1"
+        on:click={() => changePage(current + 1)}>
+        <span>»</span>
+      </button>
+      <button
+        class="pagination-link text-sm text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3 ml-1"
+        on:click={() => changePage(count)}>
+        <span>»»</span>
+      </button> 
+    {/if}
+  </div>
+</div>
+{/if} -->
+
+{#if count>1}
+<div class="flex flex-col lg:flex-row justify-between items-center">
+  <div class="text-xs text-gray-500 items-center mb-4 lg:mb-0">Page {current} of {count}</div>
+  <div class="flex-1 flex items-center text-center justify-center">
+    <ul class="pagination flex items-center justify-center text-sm text-center mx-auto">
+    {#if current > 1}
+      <li class="pagination__item list-none mr-1"><a rel="prefetch" href="/store" class="text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3">««</a></li>
+      <li class="pagination__item list-none mx-1"><a rel="prefetch" href="{current !== 1 ? `store/page/${current - 1}` : 'store' }" class="text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3">«</a></li>
+    {/if}
+    {#each { length: pages } as _, i}
+    <li class="pagination__item list-none mx-1"><a rel="prefetch" href="{(i + 1) !== 1 ? `store/page/${i + 1}` : 'store' }" class="pagination__item-link text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3 { (i + 1) === current ? 'active' : '' }">{i + 1}</a></li>
+    {/each}
+    {#if current < count}
+    <li class="pagination__item list-none mx-1"><a rel="prefetch" href="{current !== 1 ? `store/page/${current + 1}` : 'store' }" class="text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3">»</a></li>
+    <li class="pagination__item list-none ml-1"><a rel="prefetch" href="{`/store/page/${count}`}" class="text-gray-600 hover:text-secondary hover:no-underline bg-white rounded-sm shadow hover:shadow-lg py-1 px-3">»»</a></li>
+    {/if}
+    </ul>
+  </div>
+</div>
+{/if}
 </div>
 
+<style>
+  .pagination__item-link.active {
+    @apply text-white bg-primary;
+  }
+</style>

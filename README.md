@@ -1,7 +1,6 @@
 # sapper-template
 
-The default [Sapper](https://github.com/sveltejs/sapper) template, available for Rollup and webpack.
-
+This is a fork of Sapper's project template to enable usage of Tailwindcss. Refer to [Sapper](https://github.com/sveltejs/sapper) for more info.
 
 ## Getting started
 
@@ -12,16 +11,10 @@ The default [Sapper](https://github.com/sveltejs/sapper) template, available for
 
 ```bash
 # for Rollup
-npx degit "sveltejs/sapper-template#rollup" my-app
+npx degit "sarioglu/sapper-tailwindcss-template#rollup" my-app
 # for webpack
-npx degit "sveltejs/sapper-template#webpack" my-app
+npx degit "sarioglu/sapper-tailwindcss-template#webpack" my-app
 ```
-
-
-### Using GitHub templates
-
-Alternatively, you can use GitHub's template feature with the [sapper-template-rollup](https://github.com/sveltejs/sapper-template-rollup) or [sapper-template-webpack](https://github.com/sveltejs/sapper-template-webpack) repositories.
-
 
 ### Running the project
 
@@ -85,7 +78,7 @@ Sapper uses Rollup or webpack to provide code-splitting and dynamic imports, as 
 
 To start a production version of your app, run `npm run build && npm start`. This will disable live reloading, and activate the appropriate bundler plugins.
 
-You can deploy your application to any environment that supports Node 10 or above. As an example, to deploy to [ZEIT Now](https://zeit.co/now) when using `sapper export`, run these commands:
+You can deploy your application to any environment that supports Node 10 or above. As an example, to deploy to [Vercel Now](https://vercel.com) when using `sapper export`, run these commands:
 
 ```bash
 npm install -g now
@@ -109,104 +102,3 @@ npm install -D @sveltejs/svelte-virtual-list
 ## Bugs and feedback
 
 Sapper is in early development, and may have the odd rough edge here and there. Please be vocal over on the [Sapper issue tracker](https://github.com/sveltejs/sapper/issues).
-
-
-
-
-# Sapper
-
-Setting up Tailwind with Sapper is really simple, just install Tailwind and postcss-cli:
-
-```sh
-npm install tailwindcss postcss-cli --save-dev
-```
-
-If you want to remove unused styles, add PurgeCSS as well
-
-```
-npm install @fullhuman/postcss-purgecss
-```
-
-Create your Tailwind config file
-
-```sh
-./node_modules/.bin/tailwind init tailwind.js
-```
-
-Create a `postcss.config.js` file and add this to it
-
-```js
-const tailwindcss = require("tailwindcss");
-
-// only needed if you want to purge
-const purgecss = require("@fullhuman/postcss-purgecss")({
-  content: ["./src/**/*.svelte", "./src/**/*.html"],
-  defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
-});
-
-module.exports = {
-  plugins: [
-    tailwindcss("./tailwind.js"),
-
-    // only needed if you want to purge
-    ...(process.env.NODE_ENV === "production" ? [purgecss] : [])
-  ]
-};
-```
-
-Next, create a CSS file for your Tailwind styles. You have to store in it static folder `static/tailwind.css` and add this to it :
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-Update your `package.json` with the custom scripts.
-
-`build:tailwind is only needed if you want to purge`
-
-```js
-"scripts": {
-    "watch:tailwind": "postcss static/tailwind.css -o static/index.css -w",
-    "build:tailwind": "NODE_ENV=production postcss static/tailwind.css -o static/index.css" ,
-    "build": "npm run build:tailwind && sapper build --legacy",
-
-}
-```
-
-Finally, add a stylesheet link to your `src/template.html` file
-
-```html
-<link rel="stylesheet" href="index.css" />
-```
-
-## Project setup
-
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-
-Run these commands in a seperate window
-
-```
-npm run watch:tailwind
-```
-
-```
-npm run dev
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### export to static site
-
-```
-npm run export
-```

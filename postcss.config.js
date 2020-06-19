@@ -1,5 +1,3 @@
-const tailwindcss = require("tailwindcss");
-
 const purgecss = require('@fullhuman/postcss-purgecss')({
   content: [
     './**/**/*.html',
@@ -15,13 +13,8 @@ const production = process.env.NODE_ENV !== 'development'
 
 module.exports = {
   plugins: [
-    tailwindcss("./tailwind.js"),
-    require('postcss-import'),
-    require('postcss-nested'),
-    require('postcss-preset-env')({
-      stage: 0,
-      browsers: 'last 2 versions'
-    }),
+    require('tailwindcss'),
+	require('postcss-nested'),
     ...(production ? [purgecss] : [])
   ]
 };
